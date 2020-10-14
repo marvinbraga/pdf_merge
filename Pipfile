@@ -6,6 +6,11 @@ verify_ssl = true
 [dev-packages]
 pyinstaller = "*"
 ipython = "*"
+pylint = "*"
+flake8 = "*"
+pytest = "*"
+coverage = "*"
+codecov = "*"
 
 [packages]
 pypdf2 = "*"

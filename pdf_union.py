@@ -41,13 +41,14 @@ class PdfUnion:
             merger.append(input_file)
         return self
 
-    def _add_files_from_base64(self, merger):
+    def _add_files_from_base64(self, merger: PdfFileMerger):
         """
         Adiciona os stream de cada PDF para o merger.
         :merger: Objeto de PdfMerger.
         """
         for pdf in self.pdfs:
-            merger.append(base64.decodebytes(pdf.encode()))
+            stream = BytesIO(base64.decodebytes(pdf.encode()))
+            merger.append(stream)
         return self
 
     def _save_to_file(self, merger):
