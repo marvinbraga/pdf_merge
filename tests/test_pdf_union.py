@@ -1,7 +1,10 @@
+import base64
 import os
+from io import BytesIO
 
 import pytest
 
+from PyPDF2 import PdfFileReader
 from pdf_union import PdfUnion
 
 
@@ -109,7 +112,10 @@ def test_generate_base64_from_file(file_input_base64_result):
     Teste para verificar se está gerando uma saída com string.
     O atributo stream é inicializado com None.
     """
-    assert file_input_base64_result.execute().stream is not None
+    base64_text = file_input_base64_result.execute().stream
+    stream = BytesIO(base64.decodebytes(base64_text.encode()))
+    pages_count = PdfFileReader(stream).numPages
+    assert base64_text is not None and pages_count == 5
 
 
 @pytest.mark.usefixtures
@@ -120,9 +126,10 @@ def test_generate_file_from_file(file_input_file_result):
     """
     file_input_file_result.execute()
     is_result_exists = os.path.isfile('result.pdf')
+    pages_count = PdfFileReader('result.pdf').numPages
     if is_result_exists:
         os.remove('result.pdf')
-    assert is_result_exists and file_input_file_result.stream is None
+    assert is_result_exists and file_input_file_result.stream is None and pages_count == 5
 
 
 @pytest.mark.usefixtures
@@ -131,7 +138,10 @@ def test_generate_base64_from_base64(base64_input_base64_result):
     Teste para verificar se está gerando uma saída com string a partir de um base64.
     O atributo stream é inicializado com None.
     """
-    assert base64_input_base64_result.execute().stream is not None
+    base64_text = base64_input_base64_result.execute().stream
+    stream = BytesIO(base64.decodebytes(base64_text.encode()))
+    pages_count = PdfFileReader(stream).numPages
+    assert base64_text is not None and pages_count == 2
 
 
 @pytest.mark.usefixtures
@@ -142,6 +152,7 @@ def test_generate_file_from_base64(base64_input_file_result):
     """
     base64_input_file_result.execute()
     is_result_exists = os.path.isfile('result.pdf')
+    pages_count = PdfFileReader('result.pdf').numPages
     if is_result_exists:
         os.remove('result.pdf')
-    assert is_result_exists and base64_input_file_result.stream is None
+    assert is_result_exists and base64_input_file_result.stream is None and pages_count == 2
