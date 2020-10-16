@@ -27,7 +27,11 @@ class ServerMergePdf:
             except Exception:
                 traceback.print_exc()
 
-    def server_date_time(self):
+    @staticmethod
+    def server_date_time():
+        """
+        Recupera a data do servidor.
+        """
         return datetime.strftime(datetime.now(), '%a, %d/%b/%y %H:%M:%S')
 
     def worker(self, client):
