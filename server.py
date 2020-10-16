@@ -8,6 +8,8 @@ from pdf_union import PdfUnion
 
 class ServerMergePdf:
 
+    len_buffer = 10 ** 9
+
     def __init__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(('127.0.0.1', 8777))
@@ -31,18 +33,20 @@ class ServerMergePdf:
     def worker(self, client):
         try:
             while True:
-                json_data = client.recv().decode('utf-8')
+                json_data = client.recv(self.len_buffer).decode('utf-8')
                 if json_data:
                     # Recupera as informações enviadas pelo client.
                     pdfs, input_type = self.get_pdfs(json_data)
-                    print(self.server_date_time(), f'Executando o comando: {json_data}...')
+                    print(self.server_date_time(), f'Executando o comando: {input_type}...')
                     # Faz o merge nos Pdfs.
                     result = PdfUnion(input_type, 'None', *pdfs).execute().stream
-                    print(self.server_date_time(), f'Comando executado: {json_data}...')
+                    print(self.server_date_time(), f'Comando executado: {input_type}...')
                     # Retorna o base64 do PDF mesclado.
-                    client.send(result)
-                    print(self.server_date_time(), f'Valor retornado: [{result}]...')
-        except EOFError:
+                    client.sendall(result.encode('utf-8'))
+                    print(self.server_date_time(), f'Valor retornado: [{len(result)}]...')
+                else:
+                    break
+        except (EOFError, ConnectionResetError):
             print(self.server_date_time(), 'Conexão encerrada com o Cliente.')
 
         return self
@@ -55,7 +59,7 @@ class ServerMergePdf:
             input_type = ''
         # Recupera os PDFs em base64.
         pdfs = data.get('pdfs')
-        result = [doc.get('pdf') for doc in pdfs]
+        result = [doc for doc in pdfs]
         return result, input_type
 
 
