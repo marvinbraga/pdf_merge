@@ -1,6 +1,5 @@
 import base64
 import os
-import sys
 from io import BytesIO
 
 from PyPDF2 import PdfFileMerger
@@ -36,6 +35,7 @@ class PdfUnion:
             input_file = pdf + '.pdf'
             # Verifica se o arquivo de entrada existe.
             if not os.path.isfile(input_file):
+                print(input_file)
                 raise FileNotFoundError()
             # Executa o merge dos arquivos.
             merger.append(input_file)
@@ -58,11 +58,13 @@ class PdfUnion:
         """
         # Verifica se o arquivo de saída já existe.
         if os.path.isfile(self.output_file):
+            print(f'Excluindo arquivo: {self.output_file}')
             # Exclui o arquivo de saída.
             os.remove(self.output_file)
 
         # Executa o merge entre os arquivos informados.
         merger.write(self.output_file)
+        print(f'Salvo em: {self.output_file}')
         return self
 
     def _convert_to_base64(self, merger):
@@ -82,7 +84,7 @@ class PdfUnion:
         merger = PdfFileMerger()
         try:
             if self.is_input_base64:
-                # Adiciona arquvios de base64.
+                # Adiciona arquivos de base64.
                 self._add_files_from_base64(merger)
             else:
                 # Adiciona arquivos de um caminho.
@@ -97,10 +99,3 @@ class PdfUnion:
         finally:
             merger.close()
         return self
-
-
-if __name__ == '__main__':
-    # Faz a verificação dos parâmetros.
-    if len(sys.argv) > 1:
-        # Instância e executa o objeto para fazer o merge entre os documentos.
-        PdfUnion(*sys.argv).execute()

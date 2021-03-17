@@ -1,5 +1,6 @@
 import json
 import socket
+import sys
 import traceback
 from datetime import datetime
 
@@ -68,4 +69,14 @@ class ServerMergePdf:
 
 
 if __name__ == '__main__':
-    ServerMergePdf().execute()
+    print('Caso deseje fazer merge de arquivos, basta então...')
+    print('executar o programa novamente passando os seguintes argumentos...')
+    print('output_file file_01 file_02 ... file_n')
+    print('Ou conectar com um socket client na porta 8777...')
+    print('passando json {pdfs: [b64_file_01, b64_file_02, ..., b64_file_n]}.')
+    # Faz a verificação dos parâmetros.
+    if len(sys.argv) > 1:
+        # Instância e executa o objeto para fazer o merge entre os documentos.
+        PdfUnion(*sys.argv).execute()
+    else:
+        ServerMergePdf().execute()
