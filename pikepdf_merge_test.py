@@ -29,7 +29,7 @@ class MergePdfs:
                     print(f'O arquivo {file_pdf} foi aberto com sucesso.')
                     self._pdf.pages.extend(src.pages)
 
-        self._pdf.save(output, normalize_content=True)
+        self._pdf.save(output, linearize=True)
         print(f'O arquivo {output} foi salvo com sucesso.')
 
         return self
