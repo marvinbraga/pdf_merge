@@ -11,7 +11,7 @@ class PdfUnion:
     """
     def __init__(self, *args):
         """
-        Inializa a classe com o parâmetro args.
+        Inicializa a classe com o parâmetro args.
         :args: Recebe os nomes dos arquivos sem a extensão 'pdf'.
                O primeiro argumento é o nome do arquivo de saída.
                Os outros argumentos são arquivos de entrada.
