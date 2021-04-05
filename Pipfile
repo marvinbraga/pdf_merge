@@ -17,6 +17,7 @@ pypdf2 = "*"
 pikepdf = "*"
 img2pdf = "*"
 wand = "*"
+pypdf4 = "*"
 
 [requires]
 python_version = "3.8"
